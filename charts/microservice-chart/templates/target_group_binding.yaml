@@ -1,0 +1,13 @@
+{{- if .Values.targetGroupBinding.create -}}
+apiVersion: elbv2.k8s.aws/v1beta1
+kind: TargetGroupBinding
+metadata:
+  name: {{ include "microservice-chart.fullname" . }}
+  labels:
+    {{- include "microservice-chart.labels" . | nindent 4 }}
+spec:
+  serviceRef:
+    name: {{ include "microservice-chart.fullname" . }}
+    port: {{ .Values.service.port }}
+  targetGroupARN: {{ .Values.targetGroupBinding.arn }}
+{{- end }}
