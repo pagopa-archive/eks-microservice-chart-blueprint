@@ -5,6 +5,7 @@ image:
   pullPolicy: Always
   tag: ""
   port: 80
+  env: {}
 
 imagePullSecrets: []
 nameOverride: ""
