@@ -1,6 +1,6 @@
-# K8s Microservice Template &middot; [![GitHub Release](https://img.shields.io/github/v/release/pagopa/aks-microservice-chart-blueprint?style=flat)](https://github.com/pagopa/aks-microservice-chart-blueprint/releases) [![GitHub Issues](https://img.shields.io/github/issues/pagopa/aks-microservice-chart-blueprint?style=flat)](https://github.com/pagopa/aks-microservice-chart-blueprint/issues) [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
+# K8s Microservice Template &middot; [![GitHub Release](https://img.shields.io/github/v/release/pagopa/eks-microservice-chart-blueprint?style=flat)](https://github.com/pagopa/eks-microservice-chart-blueprint/releases) [![GitHub Issues](https://img.shields.io/github/issues/pagopa/eks-microservice-chart-blueprint?style=flat)](https://github.com/pagopa/eks-microservice-chart-blueprint/issues) [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
 
-The `aks-microservice-chart-blueprint` chart is the best way to release your
+The `eks-microservice-chart-blueprint` chart is the best way to release your
 microservice into PagoPA K8s environment. It contains all the required
 components to get started, and it has several architectural aspects already
 configured.
@@ -46,7 +46,7 @@ mkdir helm && cd helm
 Add Helm repo:
 
 ```shell
-helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
+helm repo add pagopa-microservice https://pagopa.github.io/eks-microservice-chart-blueprint
 ```
 
 > If you had already added this repo earlier, run `helm repo update` to retrieve
@@ -65,7 +65,7 @@ appVersion: 1.0.0
 dependencies:
 - name: microservice-chart
   version: 1.19.0
-  repository: "https://pagopa.github.io/aks-microservice-chart-blueprint"
+  repository: "https://pagopa.github.io/eks-microservice-chart-blueprint"
 EOF
 ```
 
@@ -124,66 +124,7 @@ Here you can find a result of the template [final result](docs/FINAL_RESULT_EXAM
 
 In the [`example`](example/) folder, you can find a working examples.
 
-### Progessive-delivery
-
-Use spring-boot-app-color to test canary deployment
-
-### Azure function App
-
-It is an elementary version of an Azure Function App written in NodeJS.
-
-It has three functions:
-
-- `ready` that responds to the readiness probe;
-- `live` that responds to the liveness probe;
-- `secrets` that return a USER and a PASS taken respectively from a K8s ConfigMap
-  and an Azure Key Vault.
-
-To try it locally use either the [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Clinux%2Ccsharp%2Cportal%2Cbash)
-or [Docker](example/Dockerfile).
-
-You can also find a [generic pipeline](example/.devops).
-
-### SpringBoot (Java) web app colors
-
-<https://github.com/pagopa/devops-java-springboot-color>
-
-there are two folders called:
-
-- spring-boot-app-bar
-- spring-boot-app-foo
-
-This are only a helm chart that install a simple web application written in java springboot.
-
-This can be usefull to check how works aks with two applications
-
-### Static Application Security Testing
-
-We strongly suggest performing SAST on your microservice Helm chart. You could
-look at this [GitHub Action](.github/workflows/check_helm.yml).
-
-## Yaml chart configuration properties (values.yaml)
-
-see [README/Microservice Chart configuration](charts/microservice-chart/README.md) to understand how to use the values.
-
-### Yaml: how to load values from externals config maps and use as ENV variable
-
-Is possibile to load inside the deployment the values of an external config map, into ENV variables.
-
-To do so, you can use this example snippet code:
-
-```yaml
-envConfigMapExternals:
-  progressive-delivery-mock-one:
-    PLAYER_INITIAL_LIVES_ENV: player_initial_lives
-    UI_PROPERTIES_FILE_NAME_ENV: ui_properties_file_name
-```
-
-```yaml
-envConfigMapExternals:
-  <config map name>:
-    <ENV variable name>: <key name inside the config map>
-```
+### Example #1
 
 ## Advanced
 
@@ -194,8 +135,8 @@ For more information, visit the [complete documentation](https://pagopa.atlassia
 Clone the repository and run the setup script:
 
 ```shell
-git clone git@github.com:pagopa/aks-microservice-chart-blueprint.git
-cd aks-microservice-chart-blueprint.git
+git clone git@github.com:pagopa/eks-microservice-chart-blueprint.git
+cd eks-microservice-chart-blueprint.git
 sh /bin/setup
 ```
 
@@ -217,135 +158,3 @@ To update the page content, use `bin/publish`.
 ## Known issues and limitations
 
 - None.
-
-## Breaking changes
-
-### v2.4.0
-
-*livenessProbe*
-*readinessProbe*
-Now chose if enable tcpSocket ot httpGet 
-
-```yaml
-  livenessProbe:
-    handlerType: httpGet <httpGet|tcpSocket>
-  readinessProbe:
-    handlerType: httpGet <httpGet|tcpSocket>
-```
-
-### v2.3.0
-
-*fileConfigExternals*:
-
-Now create file from external config map
-
-```yaml
-  fileConfigExternals:
-    create: true
-    configMaps:
-      - name: nodo-cacerts
-        key: cacerts
-```
-
-### v2.2.0
-
-*serviceMonitor*:
-
-Now create service monitor for send metrics to prometheus
-
-```yaml
-  serviceMonitor:
-    create: true
-    endpoints:
-      - interval: 10s #micrometer
-        targetPort: 9092
-        path: /
-      - interval: 10s #cinnamon
-        targetPort: 9091
-        path: /metrics
-```
-
-### v2.1.0
-
-*fileShare*:
-
-Now use azure storage file and mount in a pod to `/mnt/file-azure/{{ name }}/..` (Es. `/mnt/file-azure/certificates/java-cacerts`)
-(Attention key vault must contains two keys, `azurestorageaccountname` and `azurestorageaccountkey`. See <https://learn.microsoft.com/en-us/azure/aks/azure-files-volume> and storage file share named as fileShare.folders.name)
-
-```yaml
-  fileShare:
-    create: true
-    folders:
-      - name: certificates
-        readOnly: false
-        mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30"
-      - name: firmatore
-        readOnly: false
-        mountOptions: "dir_mode=0777,file_mode=0777,cache=strict,actimeo=30"
-```
-
-*envFieldRef*:
-
-Now map environment from a Pod Information
-
-```yaml
-  envFieldRef:
-    NAMESPACE: "metadata.namespace"
-    SERVICE_HTTP_HOST: "status.podIP"
-```
-
-*fileConfig*:
-
-Now load file inside configMap and mount in a pod to `/mnt/file-config/..` (Es. `/mnt/file-config/logback.xml`)
-
-```yaml
-  fileConfig:
-    logback.xml: |-
-      <?xml version="1.0" encoding="UTF-8"?>
-      <configuration scan="true" scanPeriod="30 seconds">
-
-          <property name="CONSOLE_PATTERN" value="%d %-5level [sid:%X{sessionId}] [can:%X{idCanale}] [sta:%X{idStazione}] [%logger] - %msg [%X{akkaSource}]%n"/>
-
-          <appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
-              <encoder>
-                  <pattern>${CONSOLE_PATTERN}</pattern>
-                  <charset>utf8</charset>
-              </encoder>
-          </appender>
-
-          <root level="INFO">
-              <appender-ref ref="CONSOLE_APPENDER_ASYNC" />
-          </root>
-      </configuration>
-```
-
-Or use commenad helm for load file while use a subchart
-
-```sh
---set-file 'microservice-chart.fileConfig.logback\.xml'=helm/config/dev/logback.xml
-```
-
-### v2.0.0
-
-*service*:
-
-Now use a list of ports and not more a single value
-
-```yaml
-  service:
-    create: true
-    type: ClusterIP
-    ports:
-    - 8080
-    - 4000
-```
-
-*ingress*: now you need to specify the service port
-
-```yaml
-  ingress:
-    create: true
-    host: "dev01.rtd.internal.dev.cstar.pagopa.it"
-    path: /rtd/progressive-delivery/(.*)
-    servicePort: 8080
-```
