@@ -66,9 +66,13 @@ tolerations: []
 
 affinity: {}
 
-targetGroupBinding:
+ingress:
   create: false
-  arn: ""
+  load_balancer_name: ""
+  host: null
+  path: ""
+  pathType: Prefix
+  port: 80
 
 autoscaling:
   enable: false
