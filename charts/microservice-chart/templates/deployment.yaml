@@ -44,7 +44,7 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.image.env }}
+          {{- with .Values.env }}
           env:
             {{- range $key, $val := . }}
             - name: {{ $key }}

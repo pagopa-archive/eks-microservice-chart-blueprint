@@ -5,7 +5,8 @@ image:
   pullPolicy: Always
   tag: ""
   port: 80
-  env: {}
+
+env: {}
 
 imagePullSecrets: []
 nameOverride: ""
@@ -58,13 +59,6 @@ resources:
   limits:
     memory: "128Mi"
     cpu: "150m"
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 
