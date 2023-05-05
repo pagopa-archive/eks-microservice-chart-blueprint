@@ -3,16 +3,14 @@ apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
   name: {{ include "microservice-chart.fullname" . }}
-  namespace: {{ .Values.namespace }}
 spec:
   podIdentity:
-    provider: azure
+    provider: aws-eks
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: {{ include "microservice-chart.fullname" . }}
-  namespace: {{ .Values.namespace }}
   labels:
     {{- include "microservice-chart.labels" . | nindent 3 }}
   annotations:
@@ -27,6 +25,9 @@ spec:
   triggers:
     {{- range .Values.autoscaling.triggers }}
     - type: {{ .type }}
+      {{- if .metricType }}
+      metricType: {{ .metricType }}
+      {{- end }}
       authenticationRef:
         name: {{ include "microservice-chart.fullname" $ }}
       metadata:
