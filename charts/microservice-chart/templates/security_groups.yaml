@@ -1,0 +1,13 @@
+{{- if .Values.image.securityGroupIds }}
+apiVersion: vpcresources.k8s.aws/v1beta1
+kind: SecurityGroupPolicy
+metadata:
+  name: {{ include "microservice-chart.fullname" . }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "microservice-chart.selectorLabels" . | nindent 6 }}
+  securityGroups:
+    groupIds:
+      {{- toYaml .Values.image.securityGroupIds | nindent 6 }}
+{{- end }}
