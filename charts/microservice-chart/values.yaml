@@ -5,6 +5,7 @@ image:
   pullPolicy: Always
   tag: ""
   port: 80
+  securityGroupIds: []
 
 env: {}
 
@@ -33,6 +34,7 @@ securityContext:
   # runAsUser: 1000
 
 service:
+  targetGroupArn: ""
   type: ClusterIP
   port: 80
 
@@ -65,14 +67,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-ingress:
-  create: false
-  load_balancer_name: ""
-  host: null
-  path: ""
-  pathType: Prefix
-  port: 80
 
 autoscaling:
   enable: false
