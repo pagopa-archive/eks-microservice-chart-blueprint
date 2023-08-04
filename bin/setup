@@ -4,7 +4,7 @@ set -Eeuo pipefail
 
 usage() {
   cat 1>&2 <<EOF
-Setup local enviornment with ASDF. It installs NodeJS and Helm.
+Setup local enviornment with ASDF. It installs Helm.
 
 USAGE:
     setup [-h]
@@ -61,10 +61,6 @@ main() {
   require_dependency curl
   require_dependency git
   install_vm
-
-  asdf plugin add nodejs
-  asdf install nodejs 14.17.3
-  npm install -g azure-functions-core-tools
 
   asdf plugin add helm
   asdf install helm 3.8.0

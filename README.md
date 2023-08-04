@@ -7,22 +7,16 @@ configured.
 
 Some of the key benefits of this chart are:
 
-- Highly secure environment thanks to Secret Store CSI Provider;
-- Ingress HTTPS connection;
+- Enable security group per pods feature;
+- Connect to your existing load balancer;
 - Improved scalability and reliability thanks to **Keda**;
-- Simpified way to setup secrets and configMaps
+- Simpified way to setup secrets and configMaps.
 
-## Architecture
-
-To see the entire architecture please see this page [architecture](docs/ARCHITECTURE.md)
+![Architecture](docs/images/overview.png)
 
 ## Changelog
 
 see [CHANGELOG](CHANGELOG) to see the new features and the breking changes
-
-## Pre requisites
-
-- helm & kubernetes
 
 ### Static analysis
 
@@ -46,7 +40,7 @@ mkdir helm && cd helm
 Add Helm repo:
 
 ```shell
-helm repo add pagopa-microservice https://pagopa.github.io/eks-microservice-chart-blueprint
+helm repo add pagopa-eks-microservice https://pagopa.github.io/eks-microservice-chart-blueprint
 ```
 
 > If you had already added this repo earlier, run `helm repo update` to retrieve
@@ -64,7 +58,7 @@ version: 1.0.0
 appVersion: 1.0.0
 dependencies:
 - name: microservice-chart
-  version: 1.19.0
+  version: 1.0.0
   repository: "https://pagopa.github.io/eks-microservice-chart-blueprint"
 EOF
 ```
@@ -98,37 +92,13 @@ Change version of the dependency and run the update:
 cd helm && helm dep update .
 ```
 
-## Template/App mandatory resources and configuration
+## Template mandatory resources and configuration
 
-To work as expect this template must request:
+To work as expect this template requires:
 
-App:
-
-- has liveness and readiness endpoints
-- you know which are the probes for your application, because are mandatory
-
-Azure:
-
-- TLS certificate are present into the kv (for ingress)
-- Managed POD identity are created
-
-K8s:
-
-- Reloader of other tools that allow to restar the pod in case of some of the config map or secret are changed
-
-## Final Result
-
-Here you can find a result of the template [final result](docs/FINAL_RESULT_EXAMPLE.md)
-
-## Examples
-
-In the [`example`](example/) folder, you can find a working examples.
-
-### Example #1
-
-## Advanced
-
-For more information, visit the [complete documentation](https://pagopa.atlassian.net/wiki/spaces/DEVOPS/pages/479658690/Microservice+template).
+- Application has liveness and readiness endpoints;
+- [Reloader](https://github.com/stakater/Reloader) or other tools that allow to restart pods when ConfigMap or Secret change;
+- [Keda](https://github.com/kedacore/keda).
 
 ## Development
 
@@ -147,7 +117,6 @@ compatibility issues in your environment. To prevent any potential
 problems, you can install these dependencies manually or with your
 favourite tool:
 
-- NodeJS 14.17.3
 - Helm 3.8.0
 
 ### Publish
